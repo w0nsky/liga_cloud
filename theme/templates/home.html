@@ -3,6 +3,410 @@
 {% block title %}Strona główna{% endblock %}
 
 {% block content %}
-<h2 class="text-red-500">Witaj na stronie głównej!</h2>
-<p>To jest zawartość konkretnej strony.</p>
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-chart-line text-primary text-2xl mr-3"></i>
+                    <h1 class="text-xl font-bold text-gray-900">Dashboard Analityczny</h1>
+                </div>
+                
+                <!-- League Selector -->
+                <div class="flex items-center space-x-4">
+                    <label for="league-select" class="text-sm font-medium text-gray-700">Liga:</label>
+                    <select id="league-select" class="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option value="">Wszystkie ligi</option>
+                        {% for league in leagues %}
+                        <option value="{{ league.id }}" {% if current_league and current_league.id == league.id %}selected{% endif %}>
+                            {{ league.nazwa }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% if error %}
+        <!-- Error Message -->
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <div class="flex">
+                <i class="fas fa-exclamation-triangle text-red-400 mt-0.5 mr-3"></i>
+                <div>
+                    <h3 class="text-sm font-medium text-red-800">Wystąpił błąd</h3>
+                    <p class="text-sm text-red-700 mt-1">{{ error }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Best Team Card -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">
+                        <i class="fas fa-trophy text-yellow-500 mr-2"></i>
+                        Najlepsza Drużyna
+                    </h2>
+                </div>
+                
+                {% if best_team %}
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-gray-900">{{ best_team.team.nazwa }}</span>
+                        <span class="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
+                            {{ best_team.points }} pkt
+                        </span>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div>
+                            <div class="text-2xl font-bold text-success">{{ best_team.wins }}</div>
+                            <div class="text-xs text-gray-500">Wygrane</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-warning">{{ best_team.draws }}</div>
+                            <div class="text-xs text-gray-500">Remisy</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-danger">{{ best_team.losses }}</div>
+                            <div class="text-xs text-gray-500">Porażki</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between text-sm text-gray-600 pt-2 border-t">
+                        <span>Bramki: {{ best_team.goals_for }}:{{ best_team.goals_against }}</span>
+                        <span>Różnica: {{ best_team.goal_difference|stringformat:"+d" }}</span>
+                        <span>Skuteczność: {{ best_team.win_rate }}%</span>
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center text-gray-500 py-8">
+                    <i class="fas fa-info-circle text-4xl mb-3"></i>
+                    <p>Brak danych o drużynach</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Best Player Card -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">
+                        <i class="fas fa-star text-yellow-500 mr-2"></i>
+                        Najlepszy Zawodnik
+                    </h2>
+                </div>
+                
+                {% if best_player %}
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-gray-900">{{ best_player.player.nazwa }}</span>
+                        <span class="bg-success text-white px-3 py-1 rounded-full text-sm font-medium">
+                            {{ best_player.goals }} goli
+                        </span>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Średnia goli/mecz:</span>
+                            <span class="font-medium">{{ best_player.avg_goals_per_game }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Wydajność drużyn:</span>
+                            <span class="font-medium">{{ best_player.team_performance }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-2 border-t">
+                        <div class="text-xs text-gray-500 mb-1">Drużyny:</div>
+                        <div class="flex flex-wrap gap-1">
+                            {% for team in best_player.teams %}
+                            <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">{{ team.nazwa }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center text-gray-500 py-8">
+                    <i class="fas fa-info-circle text-4xl mb-3"></i>
+                    <p>Brak danych o zawodnikach</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Team Matchup Analysis -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                <i class="fas fa-crosshairs text-primary mr-2"></i>
+                Analiza Przeciwko Drużynie
+            </h2>
+            
+            <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                <div class="flex-1">
+                    <label for="team-select" class="block text-sm font-medium text-gray-700 mb-2">
+                        Wybierz drużynę do analizy:
+                    </label>
+                    <select id="team-select" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option value="">Wybierz drużynę...</option>
+                        {% for team_data in teams_dropdown %}
+                        <option value="{{ team_data.team.id }}">{{ team_data.team.nazwa }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button id="analyze-btn" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
+                        <i class="fas fa-search mr-2"></i>
+                        Analizuj
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results Container -->
+            <div id="matchup-results" class="hidden">
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h3 class="font-medium text-gray-900 mb-3">Najlepszy zawodnik przeciwko wybranej drużynie:</h3>
+                    <div id="matchup-content"></div>
+                </div>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div id="loading-indicator" class="hidden text-center py-4">
+                <i class="fas fa-spinner fa-spin text-primary text-xl"></i>
+                <p class="text-gray-600 mt-2">Analizuję dane...</p>
+            </div>
+        </div>
+
+        <!-- Teams Table -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">
+                    <i class="fas fa-table text-primary mr-2"></i>
+                    Tabela Drużyn
+                </h2>
+            </div>
+            
+            {% if teams_table %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pozycja</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Drużyna</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Mecze</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">W</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">R</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">P</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Bramki</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Różnica</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Punkty</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">%</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for team_data in teams_table %}
+                        <tr class="hover:bg-gray-50 {% if forloop.counter <= 3 %}bg-green-50{% elif forloop.counter >= teams_table|length|add:'-2' %}bg-red-50{% endif %}">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="text-sm font-medium text-gray-900">{{ forloop.counter }}</span>
+                                    {% if forloop.counter == 1 %}
+                                    <i class="fas fa-crown text-yellow-500 ml-2"></i>
+                                    {% elif forloop.counter <= 3 %}
+                                    <i class="fas fa-medal text-yellow-600 ml-2"></i>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">{{ team_data.team.nazwa }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
+                                {{ team_data.games_played }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-success">
+                                {{ team_data.wins }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-warning">
+                                {{ team_data.draws }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-danger">
+                                {{ team_data.losses }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
+                                {{ team_data.goals_for }}:{{ team_data.goals_against }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium {% if team_data.goal_difference > 0 %}text-success{% elif team_data.goal_difference < 0 %}text-danger{% else %}text-gray-500{% endif %}">
+                                {{ team_data.goal_difference|stringformat:"+d" }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="bg-primary text-white px-2 py-1 rounded text-sm font-medium">
+                                    {{ team_data.points }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
+                                {{ team_data.win_rate }}%
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-12">
+                <i class="fas fa-table text-gray-400 text-4xl mb-4"></i>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Brak danych</h3>
+                <p class="text-gray-500">Nie znaleziono żadnych drużyn do wyświetlenia.</p>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="text-center text-sm text-gray-500">
+                <p>&copy; 2024 Dashboard Analityczny. System analizy sportowej.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // League selector functionality
+        document.getElementById('league-select').addEventListener('change', function() {
+            const leagueId = this.value;
+            const currentUrl = new URL(window.location);
+            
+            if (leagueId) {
+                window.location.href = /dashboard/${leagueId}/;
+            } else {
+                window.location.href = '/dashboard/';
+            }
+        });
+
+        // Team matchup analysis
+        document.getElementById('analyze-btn').addEventListener('click', function() {
+            const teamSelect = document.getElementById('team-select');
+            const teamId = teamSelect.value;
+            
+            if (!teamId) {
+                alert('Proszę wybrać drużynę do analizy.');
+                return;
+            }
+            
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const resultsContainer = document.getElementById('matchup-results');
+            const resultsContent = document.getElementById('matchup-content');
+            
+            // Show loading
+            loadingIndicator.classList.remove('hidden');
+            resultsContainer.classList.add('hidden');
+            this.disabled = true;
+            
+            // Make AJAX request
+            fetch('/api/best-player-against-team/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    team_id: teamId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingIndicator.classList.add('hidden');
+                this.disabled = false;
+                
+                if (data.success && data.player) {
+                    const player = data.player;
+                    resultsContent.innerHTML = `
+                        <div class="bg-white rounded-lg p-4 border border-gray-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="text-lg font-semibold text-gray-900">${player.name}</h4>
+                                <span class="bg-success text-white px-3 py-1 rounded-full text-sm font-medium">
+                                    ${player.goals_against_target} goli
+                                </span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 text-center mb-3">
+                                <div>
+                                    <div class="text-xl font-bold text-primary">${player.games_against_target}</div>
+                                    <div class="text-xs text-gray-500">Mecze</div>
+                                </div>
+                                <div>
+                                    <div class="text-xl font-bold text-success">${player.wins_against_target}</div>
+                                    <div class="text-xs text-gray-500">Wygrane</div>
+                                </div>
+                                <div>
+                                    <div class="text-xl font-bold text-warning">${player.win_rate}%</div>
+                                    <div class="text-xs text-gray-500">Skuteczność</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    resultsContainer.classList.remove('hidden');
+                } else {
+                    resultsContent.innerHTML = `
+                        <div class="text-center text-gray-500 py-4">
+                            <i class="fas fa-info-circle text-2xl mb-2"></i>
+                            <p>${data.error || 'Brak danych dla wybranej drużyny'}</p>
+                        </div>
+                    `;
+                    resultsContainer.classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                loadingIndicator.classList.add('hidden');
+                this.disabled = false;
+                
+                resultsContent.innerHTML = `
+                    <div class="text-center text-red-500 py-4">
+                        <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+                        <p>Wystąpił błąd podczas analizy danych.</p>
+                    </div>
+                `;
+                resultsContainer.classList.remove('hidden');
+            });
+        });
+
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.bg-white.rounded-lg.shadow-sm');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                    this.style.transition = 'all 0.2s ease-in-out';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '';
+                });
+            });
+
+            // Animate numbers on load
+            const numbers = document.querySelectorAll('.text-2xl.font-bold');
+            numbers.forEach(num => {
+                const finalValue = parseInt(num.textContent);
+                if (!isNaN(finalValue)) {
+                    let currentValue = 0;
+                    const increment = finalValue / 30;
+                    const timer = setInterval(() => {
+                        currentValue += increment;
+                        if (currentValue >= finalValue) {
+                            currentValue = finalValue;
+                            clearInterval(timer);
+                        }
+                        num.textContent = Math.floor(currentValue);
+                    }, 50);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
 {% endblock %}

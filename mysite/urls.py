@@ -16,10 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from liga_app.views import home_view
+import liga_app.views as views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
-    path('', home_view, name='home'),
-
+    path('najlepsza-druzyna/', views.najlepsza_druzyna, name='najlepsza_druzyna'),
+    path('najlepszy-zawodnik/', views.najlepszy_zawodnik, name='najlepszy_zawodnik'),
+    path('najlepszy-na-druzyne/', views.najlepszy_na_druzyne, name='najlepszy_na_druzyne'),
 ]
+

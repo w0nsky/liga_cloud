@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-xl mt-8">
+  <h1 class="text-2xl font-bold mb-4 text-center">⚽ Najlepszy zawodnik</h1>
+  {% if player %}
+    <p class="text-lg text-center">
+      <strong>{{ player.nazwa }}</strong><br>
+      Liczba goli: {{ player.gole.count }}
+    </p>
+  {% else %}
+    <p class="text-red-500 text-center">Brak danych.</p>
+  {% endif %}
+</div>
+{% endblock %}

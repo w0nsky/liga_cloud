@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-xl mt-8">
+  <h1 class="text-2xl font-bold mb-4 text-center">🏆 Najlepsza drużyna</h1>
+  {% if team %}
+    <p class="text-lg text-center">
+      <strong>{{ team.nazwa }}</strong>
+    </p>
+  {% else %}
+    <p class="text-red-500 text-center">Brak danych.</p>
+  {% endif %}
+</div>
+{% endblock %}
