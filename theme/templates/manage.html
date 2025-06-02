@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Liga | Zaloguj się{% endblock %}
+
+{% block content %}
+<div class="flex">
+    <a href="{% url 'dodaj_zawodnika' %}"
+       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
+        Dodaj zawodnika
+    </a>
+    <a href="{% url 'dodaj_mecz' %}"
+       class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4 ml-4">
+        Dodaj mecz
+    </a>
+    <a href="{% url 'dodaj_druzyne' %}"
+       class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mb-4 ml-4">
+        Dodaj drużynę
+    </a>
+    <a href="{% url 'dodaj_gol' %}"
+         class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mb-4 ml-4">
+          Dodaj bramkę
+    </a>
+    <a href="{% url 'dodaj_wynik' %}"
+       class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-4 ml-4">
+        Dodaj wynik
+    </a>
+</div>
+{% endblock %}

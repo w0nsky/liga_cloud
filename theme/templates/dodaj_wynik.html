@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Dodaj wynik meczu{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto mt-10 bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">Dodaj wynik meczu</h1>
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+
+        <div>
+            <label for="game" class="block text-sm font-medium text-gray-700">Mecz</label>
+            <select name="game" id="game" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm">
+                <option value="" disabled selected>-- Wybierz mecz --</option>
+                {% for game in games %}
+                    <option value="{{ game.id }}">{{ game.nazwa }} ({{ game.date_and_time|date:"Y-m-d H:i" }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="gole_gospodarz" class="block text-sm font-medium text-gray-700">Gole gospodarza</label>
+            <input type="number" name="gole_gospodarz" id="gole_gospodarz" required min="0" class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm">
+        </div>
+
+        <div>
+            <label for="gole_gosc" class="block text-sm font-medium text-gray-700">Gole gościa</label>
+            <input type="number" name="gole_gosc" id="gole_gosc" required min="0" class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm">
+        </div>
+
+        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded">
+            Zapisz wynik
+        </button>
+    </form>
+</div>
+{% endblock %}

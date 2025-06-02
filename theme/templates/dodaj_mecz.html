@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Dodaj mecz{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
+  <h2 class="text-2xl font-bold mb-4">Dodaj Mecz</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="mt-4 bg-purple-600 text-white px-4 py-2 rounded">Zapisz</button>
+  </form>
+</div>
+{% endblock %}
