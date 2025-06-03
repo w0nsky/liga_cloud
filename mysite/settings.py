@@ -30,9 +30,8 @@ INSTALLED_APPS = [
     'liga_app',
     'tailwind',
     'theme',
-    'django_browser_reload',
-
 ]
+#'django_browser_reload',
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -42,9 +41,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+#"django_browser_reload.middleware.BrowserReloadMiddleware",
 
 ROOT_URLCONF = 'mysite.urls'
 
